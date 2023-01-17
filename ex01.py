@@ -1,0 +1,5 @@
+print("hello")
+print ("this is a hello with a space")
+print('single quote')
+print("I'd lol test 'not'.")
+print('do "not" touch')
