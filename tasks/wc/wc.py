@@ -15,32 +15,24 @@ def wc(filename):
 
 def wctotal(filenames):
     """ Return the total number of lines, words and characters for multiple files"""
-    line_count = word_count = char_count = 0
-    info = []
-    for filename in filenames:
-        i, j, k, l = wc(filename)
-        info.append((i,j,k,l))
-        line_count += i
-        word_count += j
-        char_count += k 
-    if len(filenames) > 1:
+    info = [wc(filename) for filename in filenames]
+    
+    if len(info) > 1:
+        line_count = sum(i[0] for i in info)
+        word_count = sum(i[1] for i in info)
+        char_count = sum(i[2] for i in info)
         info.append((line_count, word_count, char_count, "Total"))
     
     return info
 
-if __name__ == "__main__":
-
+def main():
     try:
         if len(sys.argv) < 2:
-            #sys.exit("Error: Need a file as argument")
-            raise IndexError
+            sys.exit("Error: Need a file as argument")
 
-        info = wctotal(sys.argv[1:])
+        info = wctotal(sys.argv[1:])    
         for a, b, c, d in info:
             print(f"{a} \t{b} \t{c} \t\t{d}")
-
-    except IndexError:
-        sys.exit("Error: Need a file as argument")
     
     except FileNotFoundError as e:
         sys.exit(f"Error: File {e.filename} is not found")
@@ -50,5 +42,7 @@ if __name__ == "__main__":
 
     except UnicodeDecodeError:
         sys.exit(f"Error: One of the files is not a supported format")
-        # File name is nt available in the errormessage
-        # Error happens during read()
+
+
+if __name__ == "__main__":
+    main()
