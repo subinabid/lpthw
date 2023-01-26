@@ -1,77 +1,34 @@
 # Replicate Tree in Linux
-# Have an option to add Levels
 
 import os
-import sys
-from colorama import Fore, Style
+import argparse
+from colorama import Fore
 
-def tree(dir = '.'):
-    """
-    Get details of files and directories
-    Optional input is a path
-    if path is not provided, the pwd is used as default
-    """
-    return os.scandir(dir)
+def tree(dir, level):
+    """Yields the files and folders in the specified direcotry"""
+    for i in os.scandir(dir):
+        yield(i, level)
 
 
-def print_tree(treeinfo, depth = 1, level = 1):
-    """
-    Prints the tree structure
-    Required input is theoutput of the tree() function
-    Optional input is the depth of iteration 
-    """
+def main(path, depth, level = 1):
+    for f, print_level in tree(path, level):
+        prefix = "   " * (print_level - 1)  
+        tail =  "-- " if print_level == 1 else " |-- "  
+        
+        if f.is_dir():
+            print ("|" + prefix + tail + Fore.BLUE + f.name + Fore.RESET)
+            if print_level < depth:
+                main(f.path, depth, level + 1)
 
-    d = int(depth)
-    l = int(level)
-    
-    if l == 1: 
-        print(".")
-    
-    for i in treeinfo:
-        print_tree_item(i, l)
-
-        if i.is_dir() and d > 1: 
-                print_tree(tree(i.path), d-1, l+1)
-
-
-def print_tree_item(tree_item, level = 1):
-    """
-    Prints the item
-    Formatting for Files and directories
-    """
-
-    if tree_item.is_dir(): 
-        print("|-- " * level + Fore.BLUE + tree_item.name + Fore.RESET)
+        elif f.is_file():
+            print ("|" + prefix + tail + f.name )
             
-
-    elif tree_item.is_file(): 
-        print("|-- " * level + tree_item.name)    
-
-    
-def main():
-    try:
-        inputs = sys.argv
-        
-        if len(inputs) == 1:
-            print_tree(tree())
-        
-        elif len(inputs) == 2:
-            print_tree(tree(sys.argv[1]))  
-
-        elif len(inputs) == 3:
-           print_tree(tree(sys.argv[1]), depth=sys.argv[2])  
-        
-        else:
-            raise IndexError
-            
-    except IndexError:
-        sys.exit("Error: Please check the inputs")
-
-    except FileNotFoundError:
-        sys.exit("Error: Directory is not found")
-
-    # except TypeError as e:
-    #     sys.exit(e)
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description= "Tree utility")
+    parser.add_argument("-p","--path", default = ".", help = "Location")
+    parser.add_argument("-d", "--depth", default = 1, type=int, help="Levels of sub directories")
+    args = parser.parse_args()
+
+    print(".")
+    main(args.path, args.depth)
