@@ -2,74 +2,74 @@
 import sys
 from random import choice
 from rich.console import Console
+from rich.style import Style
 
 console = Console()
+__style_0 = Style.parse("bold white")
+__style_1 = Style.parse("bold white on yellow")
+__style_2 = Style.parse("bold white on green")
+
+__file = open("words.txt", "r")
+__words = __file.read().splitlines()
+__file.close()
+__wordOfTheDay = choice(__words)
 
 def main():
-
-    wordOfTheDay = pick_wotd()
+    console.clear()
     attempt = 0
     entries = []
     checks = []
-    styles = []
-
 
     while attempt < 5:
-        entry = input("Enter a word: ").upper()
+        entry = input("Enter a 5 letter word: ").lower()
         
         if is_valid_entry(entry):
             attempt += 1
-            entries.append(entry)
-            check, style = check_word(entry, wordOfTheDay)
+            entries.append(list(entry))
+            check = check_word(entry, __wordOfTheDay)
             checks.append(check)
-            styles.append(style)
 
-            for count, word in enumerate(entries):
-                console.print(word[0], style = styles[count][0], end="")
-                console.print(word[1], style = styles[count][1], end="")
-                console.print(word[2], style = styles[count][2], end="")
-                console.print(word[3], style = styles[count][3], end="")
-                console.print(word[4], style = styles[count][4])
+            console.clear()
+            for i in range(attempt):
+                print("\t", end = "")
+                for l, s in  list(zip(entries[i], checks[i])):
+                    if s == 2: printStyle = __style_2
+                    elif s ==1:  printStyle = __style_1
+                    else: printStyle = __style_0
+                    console.print(l.upper(), style = printStyle, end = " ")
+                print()
 
-            if sum(check) == 5:
-                sys.exit("\nCongrats")
+            if sum(check) == 10:
+                sys.exit("\nCongrats! You got the right one")
 
         else:
-            print("Enter a 5 letter Word")
-
+            print("Check the word again")
+    print("\n" + __wordOfTheDay)
+    sys.exit("\nTry again")
 
 def is_valid_entry(string):
+    """Check if the entry is a valid 5 letter word"""
+    return string in __words
 
-    test_length = True if len(string) == 5 else False
-    test_chars = string.isalpha()
-
-    return True if test_length and test_chars else False
 
 def check_word(string, wordOfTheDay):
+    """
+    Analyze the input word
+    Returns an array 
+    2 - Letter is in the right position
+    1 - Letter is contained in the word
+    0 - Letter is not in the word"""
     word = list(string)
-    ref_word = list(wordOfTheDay)
+    wotd = list(wordOfTheDay)
     result = []
-    style = []
 
     for index, i in enumerate(word):
-        if i == ref_word[index]:
-            result.append(1)
-            style.append("bold white on green")
-        elif i in ref_word:
-            result.append(0)
-            style.append("bold white on yellow")
-        else:
-            result.append(0)
-            style.append("bold white")
+        if i == wotd[index]: result.append(2)
+        elif i in wotd: result.append(1)
+        else: result.append(0)
     
-    return result, style
+    return result
 
-def pick_wotd():
-    file = open("words.txt", "r")
-    words = file.read().splitlines()
-    file.close()
-
-    return choice(words).upper()
 
 if __name__ == "__main__":
     main()
