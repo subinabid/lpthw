@@ -3,16 +3,20 @@ import sys
 from random import choice
 from rich.console import Console
 from rich.style import Style
+import itertools
 
 console = Console()
-__style_0 = Style.parse("bold white")
-__style_1 = Style.parse("bold white on yellow")
-__style_2 = Style.parse("bold white on green")
+style_0 = Style.parse("bold white")
+style_1 = Style.parse("bold white on red")
+style_2 = Style.parse("bold white on yellow")
+style_3 = Style.parse("bold white on green")
 
-__file = open("words.txt", "r")
-__words = __file.read().splitlines()
-__file.close()
-__wordOfTheDay = choice(__words)
+with open("words.txt", "r") as f:
+    words = f.read().splitlines()
+    __wordOfTheDay = choice(words)
+
+alphabets = list("abcdefghijklmnopqrstuvwxyz")
+alphabets_status = list(itertools.repeat(0, 26))
 
 def main():
     console.clear()
@@ -33,23 +37,32 @@ def main():
             for i in range(attempt):
                 print("\t", end = "")
                 for l, s in  list(zip(entries[i], checks[i])):
-                    if s == 2: printStyle = __style_2
-                    elif s ==1:  printStyle = __style_1
-                    else: printStyle = __style_0
+                    if s == 3: printStyle = style_3
+                    elif s ==2:  printStyle = style_2
+                    else: printStyle = style_0
                     console.print(l.upper(), style = printStyle, end = " ")
-                print()
+                print("")
+            
+            print()   
+            for a, s in list(zip(alphabets, alphabets_status)):
+                if s == 3: printStyle = style_3
+                elif s ==2:  printStyle = style_2
+                elif s ==1: printStyle = style_1
+                else: printStyle = style_0
+                console.print(a.upper(), style = printStyle, end = " ")
+            print("\n\n")
 
-            if sum(check) == 10:
+            if sum(check) == 15:
                 sys.exit("\nCongrats! You got the right one")
 
         else:
             print("Check the word again")
-    print("\n" + __wordOfTheDay)
-    sys.exit("\nTry again")
+    console.print(__wordOfTheDay.upper(), style = style_3)
+    sys.exit("\nBetter luck next time")
 
 def is_valid_entry(string):
     """Check if the entry is a valid 5 letter word"""
-    return string in __words
+    return string in words
 
 
 def check_word(string, wordOfTheDay):
@@ -64,11 +77,23 @@ def check_word(string, wordOfTheDay):
     result = []
 
     for index, i in enumerate(word):
-        if i == wotd[index]: result.append(2)
-        elif i in wotd: result.append(1)
-        else: result.append(0)
+        if i == wotd[index]: 
+            result.append(3)
+            update_alphabet(i, 3)
+        elif i in wotd: 
+            result.append(2)
+            update_alphabet(i, 2)
+        else: 
+            result.append(1)
+            update_alphabet(i, 1)
     
     return result
+
+
+def update_alphabet(alphabet, status):
+    """Update the status of each alphabet"""
+    n = alphabets.index(alphabet)
+    alphabets_status[n] = status if alphabets_status[n] <status else alphabets_status[n]
 
 
 if __name__ == "__main__":
