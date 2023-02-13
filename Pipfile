@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 pytest = "*"
 colorama = "*"
-auto-py-to-exe = "*"
 
 [dev-packages]
 
