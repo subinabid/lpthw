@@ -57,8 +57,10 @@ def main():
 
         else:
             print("Check the word again")
+
     console.print(__wordOfTheDay.upper(), style = style_3)
     sys.exit("\nBetter luck next time")
+
 
 def is_valid_entry(string):
     """Check if the entry is a valid 5 letter word"""
@@ -66,9 +68,7 @@ def is_valid_entry(string):
 
 
 def check_word(string, wordOfTheDay):
-    """
-    Analyze the input word
-    Returns an array 
+    """Analyze the input word and returns an array of status 
     2 - Letter is in the right position
     1 - Letter is contained in the word
     0 - Letter is not in the word"""
