@@ -1,3 +1,13 @@
+# Mac
+.DS_Store
+.AppleDouble
+.LSOverride
+.AppleDB
+.AppleDesktop
+.apdisk
+._*
+
+# Python 
 *.pyc
 **/__pycache__
 .pytest_cache
