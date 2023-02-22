@@ -63,7 +63,6 @@ print(states.get('New Yor'))
 print(states.get('New Yor', "Does not Exist"))
 # print(states['New Yor']) will give an error
 
-
 # Notes
 # Using dict.get() returns None if item is not found
 # Direct access will throw an error if match is not found
@@ -74,3 +73,7 @@ print(states.get('New Yor', "Does not Exist"))
 # dict.pop(key) pops single item matching the key
 # dict.popitem() pops the last item
 # dict.fromkeys() creates a new dict based on keys and a value. IDK why this operated on a dict ????
+
+# Tech notes
+# Insertions are fast and independent of size of the dict
+# Sets are effectively dict with keys only. values are always 1
