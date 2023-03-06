@@ -13,3 +13,18 @@ class MyStuff(object):
 thing = MyStuff()
 thing.apple()
 print(thing.tangerine)
+
+class Song():
+
+    def __init__(self, lyrics):
+        self.lyrics = lyrics
+    
+    def sing(self):
+        print(self.lyrics)
+
+
+happy_birthday = Song(["Happy birthday to you"])
+bulls = Song(["Bulls song"])
+
+happy_birthday.sing()
+bulls.sing()

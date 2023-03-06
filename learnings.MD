@@ -38,3 +38,17 @@ abstraction
 indirection 
 collections
 collections.orderedDict
+
+
+## UNIX fundas
+\ls *.py | entr -c pytest
+find*.py *.html | entr -rc sysutil apache restart
+
+### If i forgot this
+ctrl r entr
+
+
+| gives output of LHS to RHS
+entr watchs a list of files for changes and ruuns a command
+pytest is pytest!  
+-c clears the terminal
